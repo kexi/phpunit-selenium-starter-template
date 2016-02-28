@@ -23,3 +23,6 @@ extras/documentation
 .settings/
 .project
 .buildpath
+
+# Idea / PHP Storm
+.idea/
