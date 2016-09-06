@@ -1,7 +1,14 @@
 <?php
 
-class GoogleTest extends PHPUnit_Extensions_Selenium2TestCase
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+
+class GoogleTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Facebook\WebDriver\WebDriver
+     */
+    protected $driver;
 
     /**
      *
@@ -11,8 +18,19 @@ class GoogleTest extends PHPUnit_Extensions_Selenium2TestCase
      */
     public function setUp()
     {
-        $this->setBrowser('firefox');
-        $this->setBrowserUrl('https://www.google.com/');
+        $host = 'http://localhost:4444/wd/hub';
+        $capabilities = DesiredCapabilities::chrome();
+        $capabilities->setCapability(\Facebook\WebDriver\Remote\WebDriverCapabilityType::PROXY, 'your.proxy.com:8080');
+        $driver = RemoteWebDriver::create($host, $capabilities);
+        $this->driver = $driver;
+    }
+
+    /**
+     *
+     */
+    public function tearDown()
+    {
+        $this->driver->close();
     }
 
     /**
@@ -22,12 +40,11 @@ class GoogleTest extends PHPUnit_Extensions_Selenium2TestCase
      */
     public function testSearch($keyword)
     {
-        $this->url('/');
-        $q = $this->byName('q');
-        $q->value($keyword);
+        $this->driver->get('http://www.google.com/');
+        $q = $this->driver->findElement(\Facebook\WebDriver\WebDriverBy::name('q'));
+        $q->sendKeys($keyword);
         $q->submit();
-        sleep(5); // @todo use $this->waitUntil($callback, $timeout)
-        $this->assertTrue(strpos($keyword, $this->title()) >= 0);
+        $this->assertTrue(strpos($keyword, $this->driver->getTitle()) >= 0);
     }
 
     /**
