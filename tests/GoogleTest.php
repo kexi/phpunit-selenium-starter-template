@@ -20,7 +20,7 @@ class GoogleTest extends \PHPUnit_Framework_TestCase
     {
         $host = 'http://localhost:4444/wd/hub';
         $capabilities = DesiredCapabilities::chrome();
-        $capabilities->setCapability(\Facebook\WebDriver\Remote\WebDriverCapabilityType::PROXY, 'your.proxy.com:8080');
+        // $capabilities->setCapability(\Facebook\WebDriver\Remote\WebDriverCapabilityType::PROXY, 'your.proxy.com:8080');
         $driver = RemoteWebDriver::create($host, $capabilities);
         $this->driver = $driver;
     }
